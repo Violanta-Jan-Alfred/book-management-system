@@ -72,12 +72,24 @@ const BookList = ({ searchTerm }) => {
   };
 
   const handleSaveChanges = () => {
+    const requiredFields = ['title', 'author', 'published_year', 'genre'];
+    const emptyFields = requiredFields.filter((field) => !selectedBook[field]);
+  
+    if (emptyFields.length > 0) {
+      setToastMessage(`Please fill in the following fields: ${emptyFields.join(', ')}`);
+      setToastVariant('danger');
+      setShowToast(true);
+      return;
+    }
+  
+    // If validation passes, proceed to confirm save changes
     if (!selectedBook.id) {
       confirmSaveChanges();
     } else {
       setSaveConfirmationOpen(true);
     }
   };
+  
 
   const confirmSaveChanges = async () => {
     try {
