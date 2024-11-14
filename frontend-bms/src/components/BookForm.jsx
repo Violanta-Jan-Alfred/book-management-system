@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { MDBBtn } from 'mdb-react-ui-kit';
 
-const BookForm = ({ bookData, onChange }) => {
+const BookForm = ({ bookData, onChange, onCancel }) => {
   const [errors, setErrors] = useState({
     title: '',
     author: '',
@@ -14,7 +13,7 @@ const BookForm = ({ bookData, onChange }) => {
     const { name, value } = e.target;
     setErrors((prev) => ({
       ...prev,
-      [name]: !value.trim() ? `${name.charAt(0).toUpperCase() + name.slice(1)} is required` : '',
+      [name]: !value.trim() ? `${name.charAt(0).toUpperCase() + name.slice(1).replace('_', ' ')} is required` : '',
     }));
   };
 
@@ -22,7 +21,7 @@ const BookForm = ({ bookData, onChange }) => {
     const { name } = e.target;
     setErrors((prev) => ({
       ...prev,
-      [name]: '',  // Clear error on focus
+      [name]: '', // Clear error on focus
     }));
   };
 
@@ -30,7 +29,12 @@ const BookForm = ({ bookData, onChange }) => {
     <div>
       {['title', 'author', 'published_year', 'genre', 'description'].map((field) => (
         <div className="mb-3" key={field}>
-          <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+          <label>
+            {field
+              .split('_')
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')}
+          </label>
           {field === 'description' ? (
             <textarea
               name={field}

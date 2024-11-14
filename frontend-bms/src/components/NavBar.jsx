@@ -4,36 +4,40 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { MDBIcon } from 'mdb-react-ui-kit';
 
 const NavBar = ({ onSearch }) => {
-  const [activeLink, setActiveLink] = useState('home'); 
-  const [isSearching, setIsSearching] = useState(false); 
+  const [activeLink, setActiveLink] = useState('home');
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
     const searchValue = e.target.elements.search.value.trim();
     if (searchValue) {
-      setIsSearching(true); 
+      setIsSearching(true);
     }
     onSearch(searchValue);
   };
 
   const handleLinkClick = (link) => {
-    setActiveLink(link); 
+    setActiveLink(link);
     setIsSearching(false);
   };
 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
-        <Navbar.Brand href="#">Book Management System</Navbar.Brand>
+        <Navbar.Brand href="#">
+          <MDBIcon fas icon="book" className="me-2" /> {/* Add book icon here */}
+          Book Management System
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
             <Nav.Link
               href="#home"
-              onClick={() => handleLinkClick('home')} 
-              style={{ color: activeLink === 'home' ? '#6f42c1' : 'inherit' }} 
+              onClick={() => handleLinkClick('home')}
+              style={{ color: activeLink === 'home' ? '#6f42c1' : 'inherit' }}
             >
               Home
             </Nav.Link>
@@ -45,12 +49,12 @@ const NavBar = ({ onSearch }) => {
               placeholder="Search books"
               className="me-2"
               aria-label="Search"
-              style={{ borderColor: isSearching ? '#6f42c1' : 'inherit' }} 
+              style={{ borderColor: isSearching ? '#6f42c1' : 'inherit' }}
             />
-            <Button 
-              variant="outline-success" 
-              type="submit" 
-              style={{ color: isSearching ? '#6f42c1' : 'inherit', borderColor: isSearching ? '#6f42c1' : 'inherit' }} 
+            <Button
+              variant="outline-success"
+              type="submit"
+              style={{ color: isSearching ? '#6f42c1' : 'inherit', borderColor: isSearching ? '#6f42c1' : 'inherit' }}
             >
               Search
             </Button>
