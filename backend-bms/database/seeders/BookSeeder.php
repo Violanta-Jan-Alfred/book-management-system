@@ -29,5 +29,30 @@ class BookSeeder extends Seeder
             'genre' => 'Historical Fiction',
             'description' => 'A story of racial injustice and childhood innocence in the American South.',
         ]);
+
+        Book::create([
+            'title' => '1984',
+            'author' => 'George Orwell',
+            'published_year' => 1949,
+            'genre' => 'Dystopian Fiction',
+            'description' => 'A novel that explores a totalitarian society under constant surveillance and control.',
+        ]);
+        
+        Book::create([
+            'title' => 'Pride and Prejudice',
+            'author' => 'Jane Austen',
+            'published_year' => 1813,
+            'genre' => 'Romantic Fiction',
+            'description' => 'A story of manners, upbringing, and marriage in early 19th-century England.',
+        ]);
+        
+        Book::create([
+            'title' => 'The Catcher in the Rye',
+            'author' => 'J.D. Salinger',
+            'published_year' => 1951,
+            'genre' => 'Coming-of-Age Fiction',
+            'description' => 'A novel about teenage rebellion and alienation in post-war America.',
+        ]);
+        
     }
 }
