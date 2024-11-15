@@ -17,7 +17,7 @@ const BookDetails = ({ book, onEdit, onDelete }) => {
       <h5>Description</h5>
       <p>{book.description}</p>
       
-      {/* Action Buttons */}
+      {/* Action Buttons EDIT and DELETE */}
       <MDBBtn color="primary" onClick={onEdit} className="me-2">
         <MDBIcon fas icon="edit" /> Edit
       </MDBBtn>
