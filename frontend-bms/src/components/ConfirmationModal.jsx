@@ -1,5 +1,11 @@
 import React from 'react';
-import { MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalBody, MDBModalFooter, MDBBtn } from 'mdb-react-ui-kit';
+import { MDBModal, 
+         MDBModalDialog, 
+         MDBModalContent, 
+         MDBModalHeader, 
+         MDBModalBody, 
+         MDBModalFooter, 
+         MDBBtn } from 'mdb-react-ui-kit';
 
 const ConfirmationModal = ({ open, onConfirm, onClose, message }) => {
   return (

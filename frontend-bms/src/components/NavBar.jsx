@@ -28,7 +28,7 @@ const NavBar = ({ onSearch }) => {
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
         <Navbar.Brand href="#">
-          <MDBIcon fas icon="book" className="me-2" /> {/* Add book icon here */}
+          <MDBIcon fas icon="book" className="me-2" /> 
           Book Management System
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
