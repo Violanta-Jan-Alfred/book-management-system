@@ -47,7 +47,7 @@ const BookList = ({ searchTerm }) => {
         setBooks(data); // Populate books state
       } catch (error) {
         console.error('Error fetching books:', error);
-        setToastMessage('Error fetching books: Database is not yet set up.');
+        setToastMessage('Error fetching books: Database is not yet set up or not running.');
         setToastVariant('danger');
         setShowToast(true); // Show error toast
       }
