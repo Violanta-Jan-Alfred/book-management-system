@@ -42,6 +42,7 @@ const NavBar = ({ onSearch }) => {
               Home
             </Nav.Link>
           </Nav>
+          {/*Search Bar*/}
           <Form className="d-flex" onSubmit={handleSearch}>
             <Form.Control
               type="search"
