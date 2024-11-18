@@ -1,4 +1,3 @@
-// Importing React and necessary components from mdb-react-ui-kit, as well as custom components
 import React, { useState, useEffect } from 'react';
 import {
   MDBTable,
@@ -21,41 +20,39 @@ import ToastMessage from './ToastMessage';
 import FAB from './Fab';
 
 const BookList = ({ searchTerm }) => {
-  // States for managing books, modal behavior, and UI feedback
-  const [books, setBooks] = useState([]); 
-  const [filteredBooks, setFilteredBooks] = useState([]); 
-  const [selectedBook, setSelectedBook] = useState(null); 
-  const [originalBook, setOriginalBook] = useState(null); 
-  const [modalOpen, setModalOpen] = useState(false); 
-  const [saveConfirmationOpen, setSaveConfirmationOpen] = useState(false); 
+  // States
+  const [books, setBooks] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [originalBook, setOriginalBook] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [saveConfirmationOpen, setSaveConfirmationOpen] = useState(false);
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false); 
+  const [isEditMode, setIsEditMode] = useState(false);
   const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState(''); 
-  const [toastVariant, setToastVariant] = useState(''); 
-  const [loading, setLoading] = useState(false); 
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastVariant, setToastVariant] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Fetches book data from the backend when the component is mounted
+  // Fetch books data
   useEffect(() => {
     const fetchBooks = async () => {
       try {
         const response = await fetch('http://localhost:8000/api/books');
-        if (!response.ok) {
-          throw new Error('Database not set up');
-        }
+        if (!response.ok) throw new Error('Database not set up');
         const data = await response.json();
-        setBooks(data); // Populate books state
+        setBooks(data);
       } catch (error) {
         console.error('Error fetching books:', error);
         setToastMessage('Error fetching books: Database is not yet set up or not running.');
         setToastVariant('danger');
-        setShowToast(true); // Show error toast
+        setShowToast(true);
       }
     };
     fetchBooks();
   }, []);
 
-  // Filters books based on the search term and updates the filteredBooks state
+  // Filter books based on search term
   useEffect(() => {
     if (searchTerm) {
       setFilteredBooks(
@@ -68,32 +65,29 @@ const BookList = ({ searchTerm }) => {
         )
       );
     } else {
-      setFilteredBooks(books); // Reset to all books if search term is empty
+      setFilteredBooks(books);
     }
   }, [books, searchTerm]);
 
-  // Handles row click to view book details in the modal
+  // Event Handlers
   const handleRowClick = (book) => {
     setSelectedBook(book);
-    setOriginalBook(book); // Backup original book data
+    setOriginalBook(book);
     setModalOpen(true);
-    setIsEditMode(false); // Open in view mode by default
-  };
-
-  // Closes the modal and resets the selected book state if necessary
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedBook(originalBook); // Reset changes if not saved
     setIsEditMode(false);
   };
 
-  // Updates the selected book state as the user edits form inputs
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedBook(originalBook);
+    setIsEditMode(false);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSelectedBook({ ...selectedBook, [name]: value });
   };
 
-  // Validates form inputs and triggers save or add operation
   const handleSaveChanges = () => {
     const requiredFields = ['title', 'author', 'published_year', 'genre'];
     const emptyFields = requiredFields.filter((field) => !selectedBook[field]);
@@ -101,47 +95,38 @@ const BookList = ({ searchTerm }) => {
     if (emptyFields.length > 0) {
       setToastMessage(`Please fill in the following fields: ${emptyFields.join(', ')}`);
       setToastVariant('danger');
-      setShowToast(true); // Show validation error
+      setShowToast(true);
       return;
     }
 
     setLoading(true);
     if (!selectedBook.id) {
-      confirmSaveChanges(); // Add new book if no ID exists
+      confirmSaveChanges();
     } else {
-      setSaveConfirmationOpen(true); // Show confirmation for editing an existing book
+      setSaveConfirmationOpen(true);
     }
   };
 
-  // Sends save or update requests to the backend and updates the UI accordingly
   const confirmSaveChanges = async () => {
     try {
-      let response;
-      if (isEditMode && selectedBook.id) {
-        // Update book if in edit mode and ID exists
-        response = await fetch(`http://localhost:8000/api/books/${selectedBook.id}`, {
-          method: 'PUT',
+      const response = await fetch(
+        `http://localhost:8000/api/books/${selectedBook.id || ''}`,
+        {
+          method: selectedBook.id ? 'PUT' : 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(selectedBook),
-        });
-      } else {
-        // Add new book if not in edit mode or no ID exists
-        response = await fetch('http://localhost:8000/api/books', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(selectedBook),
-        });
-      }
+        }
+      );
 
       if (response.ok) {
         const updatedBook = await response.json();
         if (!selectedBook.id) {
-          setBooks((prevBooks) => [...prevBooks, updatedBook]); // Add new book to list
+          setBooks((prevBooks) => [...prevBooks, updatedBook]);
           setToastMessage('Book added successfully!');
         } else {
           setBooks((prevBooks) =>
             prevBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
-          ); // Update existing book in list
+          );
           setToastMessage('Book saved successfully!');
         }
         setToastVariant('success');
@@ -150,10 +135,7 @@ const BookList = ({ searchTerm }) => {
         setSaveConfirmationOpen(false);
         setIsEditMode(false);
       } else {
-        console.error('Failed to save book');
-        setToastMessage('Failed to save book.');
-        setToastVariant('danger');
-        setShowToast(true);
+        throw new Error('Failed to save book');
       }
     } catch (error) {
       console.error('Error saving book:', error);
@@ -165,31 +147,25 @@ const BookList = ({ searchTerm }) => {
     }
   };
 
-  // Opens confirmation modal for deleting a book
   const handleDeleteBook = () => {
     setDeleteConfirmationOpen(true);
   };
 
-  // Sends delete request to the backend and updates the UI
   const confirmDeleteBook = async () => {
-    if (!selectedBook) return;
     try {
       const response = await fetch(`http://localhost:8000/api/books/${selectedBook.id}`, {
         method: 'DELETE',
       });
 
       if (response.ok) {
-        setBooks((prevBooks) => prevBooks.filter((book) => book.id !== selectedBook.id)); // Remove deleted book
+        setBooks((prevBooks) => prevBooks.filter((book) => book.id !== selectedBook.id));
         setToastMessage('Book deleted successfully!');
         setToastVariant('success');
         setShowToast(true);
         setModalOpen(false);
         setDeleteConfirmationOpen(false);
       } else {
-        console.error('Failed to delete book');
-        setToastMessage('Failed to delete book.');
-        setToastVariant('danger');
-        setShowToast(true);
+        throw new Error('Failed to delete book');
       }
     } catch (error) {
       console.error('Error deleting book:', error);
@@ -199,17 +175,17 @@ const BookList = ({ searchTerm }) => {
     }
   };
 
-  // Opens the modal for adding a new book
   const handleAddBook = () => {
-    setSelectedBook({ title: '', author: '', published_year: '', genre: '' }); // Initialize empty book
+    setSelectedBook({ title: '', author: '', published_year: '', genre: '' });
     setOriginalBook({ title: '', author: '', published_year: '', genre: '' });
     setModalOpen(true);
-    setIsEditMode(true); // Open in edit mode for adding because edit mode handles both
+    setIsEditMode(true);
   };
 
+  // Rendering
   return (
     <>
-      {/* Table displaying the list of books */}
+      {/* Books Table */}
       <MDBTable responsive>
         <MDBTableHead style={{ backgroundColor: '#4b2e83', color: '#ffffff' }}>
           <tr>
@@ -251,7 +227,7 @@ const BookList = ({ searchTerm }) => {
         </MDBTableBody>
       </MDBTable>
 
-      {/* Modal for viewing, adding, or editing book details */}
+      {/* Modals */}
       {selectedBook && (
         <MDBModal tabIndex="-1" open={modalOpen} onClose={handleCloseModal}>
           <MDBModalDialog centered>
@@ -264,7 +240,6 @@ const BookList = ({ searchTerm }) => {
                 <MDBBtn className="btn-close" color="none" onClick={handleCloseModal}></MDBBtn>
               </MDBModalHeader>
               <MDBModalBody>
-                {/* Renders BookForm for editing or BookDetails for viewing */}
                 {isEditMode ? (
                   <BookForm
                     bookData={selectedBook}
@@ -279,7 +254,6 @@ const BookList = ({ searchTerm }) => {
                   />
                 )}
               </MDBModalBody>
-              {/* Save or Add action buttons in the footer */}
               {isEditMode && (
                 <MDBModalFooter>
                   <MDBBtn color="secondary" onClick={handleCloseModal}>
@@ -295,7 +269,6 @@ const BookList = ({ searchTerm }) => {
         </MDBModal>
       )}
 
-      {/* Save Confirmation Modal */}
       <ConfirmationModal
         open={saveConfirmationOpen}
         onConfirm={confirmSaveChanges}
@@ -303,7 +276,6 @@ const BookList = ({ searchTerm }) => {
         message="Are you sure you want to save changes to this book?"
       />
 
-      {/* Delete Confirmation Modal */}
       <ConfirmationModal
         open={deleteConfirmationOpen}
         onConfirm={confirmDeleteBook}
@@ -311,7 +283,7 @@ const BookList = ({ searchTerm }) => {
         message="Are you sure you want to delete this book?"
       />
 
-      {/* Toast message for feedback */}
+      {/* Toast Messages */}
       <ToastMessage
         show={showToast}
         onClose={() => setShowToast(false)}
@@ -319,7 +291,7 @@ const BookList = ({ searchTerm }) => {
         variant={toastVariant}
       />
 
-      {/* Floating Action Button for adding a new book */}
+      {/* Add Book Button */}
       <FAB onClick={handleAddBook} />
     </>
   );
