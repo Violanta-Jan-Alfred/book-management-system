@@ -9,7 +9,7 @@ const BookForm = ({ bookData, onChange, onCancel }) => {
     description: ''
   });
 
-  const handleBlur = (e) => {
+  const handleBlur = (e) => { // handles the loosing of focus on the field
     const { name, value } = e.target;
     setErrors((prev) => ({
       ...prev,
@@ -17,7 +17,7 @@ const BookForm = ({ bookData, onChange, onCancel }) => {
     }));
   };
 
-  const handleFocus = (e) => {
+  const handleFocus = (e) => { // if it gains focus
     const { name } = e.target;
     setErrors((prev) => ({
       ...prev,
@@ -27,7 +27,7 @@ const BookForm = ({ bookData, onChange, onCancel }) => {
 
   return (
     <div>
-      {['title', 'author', 'published_year', 'genre', 'description'].map((field) => (
+      {['title', 'author', 'published_year', 'genre', 'description'].map((field) => ( //map creates the fields for each name here dynamically
         <div className="mb-3" key={field}>
           <label>
             {field
@@ -35,7 +35,7 @@ const BookForm = ({ bookData, onChange, onCancel }) => {
               .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
               .join(' ')}
           </label>
-          {field === 'description' ? (
+          {field === 'description' ? ( // if its a description make it a textarea
             <textarea
               name={field}
               value={bookData[field] || ''}
@@ -46,7 +46,7 @@ const BookForm = ({ bookData, onChange, onCancel }) => {
             />
           ) : (
             <input
-              type={field === 'published_year' ? 'number' : 'text'}
+              type={field === 'published_year' ? 'number' : 'text'} // if its a published year make it a number else just make it a text
               name={field}
               value={bookData[field] || ''}
               onChange={onChange}
@@ -55,9 +55,9 @@ const BookForm = ({ bookData, onChange, onCancel }) => {
               className={`form-control ${errors[field] ? 'is-invalid' : ''}`}
             />
           )}
-          {errors[field] && (
+          {errors[field] && ( //if a field loose focus it shows that it is required below the field
             <div className="invalid-feedback" style={{ fontSize: '0.7em', transition: 'opacity 0.3s', opacity: errors[field] ? 1 : 0 }}>
-              {errors[field]}
+              {errors[field]} 
             </div>
           )}
         </div>

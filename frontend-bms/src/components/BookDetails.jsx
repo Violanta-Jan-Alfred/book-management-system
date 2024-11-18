@@ -17,11 +17,11 @@ const BookDetails = ({ book, onEdit, onDelete }) => {
       <h5>Description</h5>
       <p>{book.description}</p>
       
-      {/* Action Buttons EDIT and DELETE */}
+      {/* Action Buttons EDIT and DELETE passed the edit and delete props*/}
       <MDBBtn color="primary" onClick={onEdit} className="me-2">
         <MDBIcon fas icon="edit" /> Edit
       </MDBBtn>
-      <MDBBtn color="danger" onClick={onDelete}>
+      <MDBBtn color="danger" onClick={onDelete}> 
         <MDBIcon fas icon="trash-alt" /> Delete
       </MDBBtn>
     </div>
