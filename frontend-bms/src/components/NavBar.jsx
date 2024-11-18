@@ -11,17 +11,12 @@ const NavBar = ({ onSearch }) => {
   const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = (e) => {
-    e.preventDefault();
-    const searchValue = e.target.elements.search.value.trim();
+    e.preventDefault(); // prevents the page from reloading
+    const searchValue = e.target.elements.search.value.trim(); // extracts and trim the search input
     if (searchValue) {
-      setIsSearching(true);
+      setIsSearching(true); // updates the state indicating that a search is ongoing
     }
-    onSearch(searchValue);
-  };
-
-  const handleLinkClick = (link) => {
-    setActiveLink(link);
-    setIsSearching(false);
+    onSearch(searchValue); //passes the value on the parent component
   };
 
   return (
@@ -34,13 +29,6 @@ const NavBar = ({ onSearch }) => {
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
-            <Nav.Link
-              href="#home"
-              onClick={() => handleLinkClick('home')}
-              style={{ color: activeLink === 'home' ? '#6f42c1' : 'inherit' }}
-            >
-              Home
-            </Nav.Link>
           </Nav>
           {/*Search Bar*/}
           <Form className="d-flex" onSubmit={handleSearch}>
